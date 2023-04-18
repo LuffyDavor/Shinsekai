@@ -3,6 +3,7 @@ import ProductList from "./ProductList";
 import { useState, useEffect } from "react";
 import agent from "../../app/api/agent";
 import LoadingComponent from "../../app/layout/LoadingComponent";
+import { Typography } from "@mui/material";
 
 export default function Catalog() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -19,6 +20,7 @@ export default function Catalog() {
 
     return (
         <>
+        <Typography gutterBottom variant="h2">Products</Typography>
             <ProductList products={products} />
         </>
     );

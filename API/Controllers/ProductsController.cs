@@ -1,7 +1,11 @@
 using API.Data;
+using API.DTOs;
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -14,19 +18,45 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts()
+        public async Task<ActionResult<List<ProductDto>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            // Include the related pictures when fetching products
+            var products = await _context.Products.Include(p => p.Pictures).ToListAsync();
+
+            // Map the products to ProductDto
+            var productDtos = products.Select(p => MapToProductDto(p)).ToList();
+
+            return productDtos;
         }
 
-        [HttpGet("{id}")] 
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            // Include the related pictures when fetching a single product
+            var product = await _context.Products.Include(p => p.Pictures).SingleOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
 
-            return product;
+            // Map the product to ProductDto
+            var productDto = MapToProductDto(product);
+
+            return productDto;
         }
+
+        private static ProductDto MapToProductDto(Product product)
+        {
+            return new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Pictures = product.Pictures.Select(pic => new PictureDto { Id = pic.Id, Url = pic.Url }).ToList(),
+                Brand = product.Brand,
+                Series = product.Series,
+                QuantityInStock = product.QuantityInStock
+            };
+        }
+
     }
 }

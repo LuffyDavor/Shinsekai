@@ -39,8 +39,8 @@ namespace API.Controllers
             if (basket == null) basket = CreateBasket();
 
             // ADD PRODUCT TO BASKET
-            var product = await _context.Products.FindAsync(productId);
-            if (product == null) return NotFound();
+            var product = await _context.Products.Include(p => p.Pictures).FirstOrDefaultAsync(p => p.Id == productId);
+            if (product == null) return BadRequest(new ProblemDetails{Title = "Product Not Found!"});
             basket.AddItem(product, quantity);
 
             var result = await _context.SaveChangesAsync() > 0;
@@ -69,6 +69,7 @@ namespace API.Controllers
             return await _context.Baskets
                 .Include(i => i.Items)
                 .ThenInclude(p => p.Product)
+                .ThenInclude(p => p.Pictures)
                 .FirstOrDefaultAsync(x => x.BuyerId == Request.Cookies["buyerId"]);
         }
 
@@ -86,24 +87,24 @@ namespace API.Controllers
             return basket;
         }
 
-        private BasketDto MapBasketToDto(Basket basket)
+private BasketDto MapBasketToDto(Basket basket)
+{
+    return new BasketDto
+    {
+        Id = basket.Id,
+        BuyerId = basket.BuyerId,
+        Items = basket.Items.Select(item => new BasketItemDto
         {
-            return new BasketDto
-            {
-                Id = basket.Id,
-                BuyerId = basket.BuyerId,
-                Items = basket.Items.Select(item => new BasketItemDto
-                {
-                    ProductId = item.ProductId,
-                    Name = item.Product.Name,
-                    Price = item.Product.Price,
-                    PictureUrl = item.Product.PictureUrl,
-                    Type = item.Product.Type,
-                    Brand = item.Product.Brand,
-                    Quantity = item.Quantity
+            ProductId = item.ProductId,
+            Name = item.Product.Name,
+            Price = item.Product.Price,
+            PictureUrl = item.Product.Pictures.FirstOrDefault()?.Url,
+            Series = item.Product.Series,
+            Brand = item.Product.Brand,
+            Quantity = item.Quantity
+        }).ToList()
+    };
+}
 
-                }).ToList()
-            };
-        }
     }
 }

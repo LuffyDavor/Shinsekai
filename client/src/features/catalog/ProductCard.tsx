@@ -1,70 +1,102 @@
-import { ListItem, ListItemAvatar, Avatar, ListItemText, Button, Card, CardActions, CardContent, CardMedia, Typography, CardHeader } from "@mui/material";
+import { Card, CardActions, CardContent, CardMedia, Typography, Box } from "@mui/material";
 import { Product } from "../../app/models/product";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import agent from "../../app/api/agent";
-import { error } from "console";
 import { LoadingButton } from "@mui/lab";
-import { useStoreContext } from "../../app/context/StoreContext";
 import { currencyFormat } from "../../app/util/util";
-import { Height } from "@mui/icons-material";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { addBasketItemAsync } from "../basket/basketSlice";
 
 interface Props {
-    product: Product;
+  product: Product;
 }
 
 export default function ProductCard({ product }: Props) {
-    const [loading, setLoading] = useState(false);
-    const {setBasket} = useStoreContext();
+  const {status} = useAppSelector(state => state.basket);
+  const dispatch = useAppDispatch();
 
-    function handleAddItem(productId: number){
-        setLoading(true);
-        agent.Basket.addItem(productId)
-          .then(basket => setBasket(basket))
-          .catch(error => console.log(error))
-          .finally(() => setLoading(false))
-    }
+  return (
+    <Card sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <CardMedia
+        sx={{
+          height: 420,
+          width: "100%",
+          transition: "transform 0.2s",
+          "&:hover": {
+            filter: "grayscale(100%)",
+            transform: "scale(1.05)"
+          }
+        }}
+        image={product.pictures[0].url}
+        title={product.name}
+        component={Link}
+            to={`/catalog/${product.id}`}
+      />
+      <Box>
+        <CardContent>
 
-    return (
-        <Card sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            {/* <CardHeader
-                avatar={
-                    <Avatar sx={{bgcolor:"secondary.main"}}>
-                        {product.name.charAt(0).toUpperCase()}
-                    </Avatar>
-                }
-                title={product.name}
-                titleTypographyProps={{
-                    sx: {fontWeight: "bold", color:"primary.main" }
-                }}
-            /> */}
-        <CardMedia
+          <Typography gutterBottom color="text.primary"
+            variant="h6"
+            sx={{
+              textAlign: "center",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 2
+            }}>
 
-
-          sx={{ height: 200, backgroundSize: "contain", backgroundColor:"contrastText", marginTop:"20px" }}
-          image={product.pictureUrl}
-          title={product.name}
-        />
-        <CardContent >
-          <Typography gutterBottom color="text.primary" variant="h6" sx={{ textAlign: "center" }} >
-            {product.name} - {product.type}
+            {product.name} - {product.brand}
           </Typography>
-          <Typography gutterBottom color="text.secondary" variant="subtitle1" sx={{ textAlign: "center" }}>
+
+          <Typography gutterBottom color="text.secondary"
+            variant="subtitle1"
+            sx={{
+              textAlign: "center",
+              overflow: "hidden"
+            }}>
+
             {currencyFormat(product.price)}
           </Typography>
+
         </CardContent>
-        <CardActions sx={{display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center', }}>
-          <LoadingButton 
-          loading={loading} 
-          onClick={() => handleAddItem(product.id)} 
-          size="small"
+
+
+        <CardActions sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: "-20px"
+        }}>
+          {/* <Button component={Link}
+            to={`/catalog/${product.id}`}
+            size="medium"
+            variant="outlined"
+            sx={{
+              color: "secondary.light",
+              borderColor: "secondary.light"
+            }}>
+            View
+          </Button> */}
+
+          <LoadingButton
+            loading={status.includes("pendingAddItem" + product.id)}
+            onClick={() => dispatch(addBasketItemAsync({productId: product.id}))}
+            size="medium"
+            variant="outlined"
+            sx={{
+              color: "secondary.light",
+              borderColor: "secondary.light"
+            }}
           >
             Add to Cart
           </LoadingButton>
-          <Button component={Link} to={`/catalog/${product.id}`} size="small">View</Button>
+
+
+
+
         </CardActions>
-      </Card>
-    )
+      </Box>
+
+    </Card>
+  )
 }

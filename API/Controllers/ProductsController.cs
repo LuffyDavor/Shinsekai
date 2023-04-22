@@ -1,11 +1,11 @@
+using System.Text.Json;
 using API.Data;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
+using API.RequestHelpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API.Controllers
 {
@@ -18,16 +18,32 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ProductDto>>> GetProducts()
+        public async Task<ActionResult<PagedList<ProductDto>>> GetProducts([FromQuery]ProductParams productParams)
         {
             // Include the related pictures when fetching products
-            var products = await _context.Products.Include(p => p.Pictures).ToListAsync();
+            var query = _context.Products.Include(p => p.Pictures)
+                .Sort(productParams.OrderBy)
+                .Search(productParams.SearchTerm)
+                .Filter(productParams.Brands, productParams.Series)
+                .AsQueryable();
+
+            // Execute the query to get the products
+            var products = await PagedList<Product>.ToPagedList(query,
+                productParams.PageNumber,
+                productParams.PageSize);
+
+            Response.AddPaginationHeader(products.MetaData);
 
             // Map the products to ProductDto
             var productDtos = products.Select(p => MapToProductDto(p)).ToList();
 
-            return productDtos;
+            // Map the paged list to PagedList<ProductDto>
+            var pagedProductDtos = new PagedList<ProductDto>(productDtos, products.MetaData.TotalCount,
+                products.MetaData.CurrentPage, products.MetaData.PageSize);
+
+            return pagedProductDtos;
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
@@ -41,6 +57,15 @@ namespace API.Controllers
             var productDto = MapToProductDto(product);
 
             return productDto;
+        }
+
+        [HttpGet("filters")]
+        public async Task<IActionResult> GetFilters()
+        {
+            var brands = await _context.Products.Select(p => p.Brand).Distinct().ToListAsync();
+            var series = await _context.Products.Select(p => p.Series).Distinct().ToListAsync();
+
+            return Ok(new {brands, series});
         }
 
         private static ProductDto MapToProductDto(Product product)

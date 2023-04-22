@@ -1,4 +1,3 @@
-import path from "path";
 import { Navigate, createBrowserRouter } from "react-router-dom";
 import App from "../layout/App";
 import HomePage from "../../features/home/HomePage";

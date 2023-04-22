@@ -1,8 +1,10 @@
 import { Typography } from "@mui/material";
-import { useAppSelector } from "../../app/store/configureStore";
+import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 
 
 export default function ContactPage() {
+    const dispatch = useAppDispatch();
     const { data, title } = useAppSelector(state => state.counter);
     return (
         <>

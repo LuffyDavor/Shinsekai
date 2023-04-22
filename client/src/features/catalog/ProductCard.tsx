@@ -67,16 +67,6 @@ export default function ProductCard({ product }: Props) {
           alignItems: 'center',
           marginTop: "-20px"
         }}>
-          {/* <Button component={Link}
-            to={`/catalog/${product.id}`}
-            size="medium"
-            variant="outlined"
-            sx={{
-              color: "secondary.light",
-              borderColor: "secondary.light"
-            }}>
-            View
-          </Button> */}
 
           <LoadingButton
             loading={status.includes("pendingAddItem" + product.id)}
@@ -90,10 +80,7 @@ export default function ProductCard({ product }: Props) {
           >
             Add to Cart
           </LoadingButton>
-
-
-
-
+          
         </CardActions>
       </Box>
 

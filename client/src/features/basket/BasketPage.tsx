@@ -32,7 +32,10 @@ export default function BasketPage() {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
-                                    <Button component={Link} to={`/catalog/${item.productId}`} size="small" color="secondary" style={{ textTransform: 'none' }}>
+                                    <Button component={Link} to={`/catalog/${item.productId}`}
+                                        size="small"
+                                        style={{ textTransform: 'none' }}
+                                        sx={{ color: "text.primary" }}>
                                         <Box display="flex" alignItems="center">
                                             <img src={item.pictureUrl} alt={item.name} style={{
                                                 marginRight: 10,
@@ -41,7 +44,9 @@ export default function BasketPage() {
                                                 width: "7vh", // to set the width of the image
                                                 height: "10vh"
                                             }} />
-                                            <span>{item.name}</span>
+                                            <Typography variant="h6" style={{ fontSize: '1.2em' }}>
+                                                {item.name}
+                                            </Typography>
                                         </Box>
 
                                     </Button>
@@ -60,7 +65,7 @@ export default function BasketPage() {
                                     {item.quantity}
                                     <LoadingButton
                                         loading={status === "pendingAddItem" + item.productId}
-                                        onClick={() => dispatch(addBasketItemAsync({productId: item.productId}))}
+                                        onClick={() => dispatch(addBasketItemAsync({ productId: item.productId }))}
                                         color="secondary">
                                         <Add />
                                     </LoadingButton>

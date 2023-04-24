@@ -10,7 +10,7 @@ export default function BasketPage() {
     const { basket, status } = useAppSelector(state => state.basket);
     const dispatch = useAppDispatch();
 
-    if (!basket || basket.items.length == 0) return <Typography variant="h3" align="center" marginTop="30%">Your Basket Is Empty</Typography>
+    if (!basket || basket.items.length === 0) return <Typography variant="h3" align="center" marginTop="30%">Your Basket Is Empty</Typography>
 
     return (
         <>

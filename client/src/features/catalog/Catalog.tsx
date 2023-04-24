@@ -1,7 +1,7 @@
 import ProductList from "./ProductList";
 import { useEffect, useState } from "react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { Typography, Drawer, List, ListItem, IconButton, FormControl, InputLabel, MenuItem, Select, FormGroup, Checkbox, FormControlLabel, Divider, Grid, Box, Pagination, Button } from "@mui/material";
+import { Typography, Drawer, List, ListItem, IconButton, Divider, Grid, Button } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { fetchFiltersAsync, fetchProductsAsync, productSelectors, setPageNumber, setProductParams } from "./catalogSlice";
 import MenuIcon from '@mui/icons-material/Menu';

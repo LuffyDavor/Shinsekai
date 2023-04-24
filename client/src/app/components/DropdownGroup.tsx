@@ -1,5 +1,4 @@
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import { useState } from "react";
 
 interface Props {
     options: any;
@@ -9,8 +8,7 @@ interface Props {
 
 export default function DropdownGroup({options, onChange, selectedValue}: Props ) {
 
-    const [sortBy, setSortBy] = useState('');
-    
+    // const [sortBy, setSortBy] = useState('');
 
     return (
         <FormControl variant="outlined" fullWidth>

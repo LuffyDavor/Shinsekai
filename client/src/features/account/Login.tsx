@@ -35,7 +35,6 @@ export default function LogIn() {
 
     }
 
-
     return (
         <Container component={Paper} maxWidth="sm"
             sx={{ display: "flex", flexDirection: "column", alignItems: "center", p: 4, mt: "100px" }}>

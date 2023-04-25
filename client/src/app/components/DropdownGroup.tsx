@@ -12,9 +12,8 @@ export default function DropdownGroup({options, onChange, selectedValue}: Props 
 
     return (
         <FormControl variant="outlined" fullWidth>
-            <InputLabel id="sort-by-label">Sort by</InputLabel>
+            <InputLabel id="sort-by-label" sx={{ color: 'secondary.light' }}>Sort by</InputLabel>
             <Select
-                color="secondary"
                 onChange={onChange}
                 label="Sort by"
                 value={selectedValue}

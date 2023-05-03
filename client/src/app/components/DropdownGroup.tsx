@@ -8,11 +8,9 @@ interface Props {
 
 export default function DropdownGroup({options, onChange, selectedValue}: Props ) {
 
-    // const [sortBy, setSortBy] = useState('');
-
     return (
         <FormControl variant="outlined" fullWidth>
-            <InputLabel id="sort-by-label" sx={{ color: 'secondary.light' }}>Sort by</InputLabel>
+            <InputLabel id="sort-by-label" >Sort by</InputLabel>
             <Select
                 onChange={onChange}
                 label="Sort by"

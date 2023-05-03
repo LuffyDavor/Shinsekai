@@ -82,7 +82,7 @@ export default function Catalog() {
                 anchor="left"
                 open={drawerOpen}
                 onClose={handleDrawerClose}
-                sx={{ width: "500px" }} // Set the width of the drawer
+                sx={{ width: "500px" }}
             >
                 <List>
 

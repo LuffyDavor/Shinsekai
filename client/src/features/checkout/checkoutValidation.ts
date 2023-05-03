@@ -12,6 +12,9 @@ export const validationSchema = [
     }),
     yup.object(),
     yup.object({
-        nameOnCard: yup.string().required()
+        nameOnCard: yup.string()
+            .required("The name is required")
+            .matches(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/, "Invalid name format")
+
     })
 ]

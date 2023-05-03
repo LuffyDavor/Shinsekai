@@ -1,4 +1,4 @@
-import { Button, Menu, Fade, MenuItem } from "@mui/material";
+import { Button, Menu, Fade, MenuItem, Avatar } from "@mui/material";
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../store/configureStore";
 import { signOut } from "../../features/account/accountSlice";
@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 export default function SignedInMenu() {
     const dispatch = useAppDispatch();
-    const {user} = useAppSelector(state => state.account);
+    const { user } = useAppSelector(state => state.account);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: any) => {
@@ -21,11 +21,12 @@ export default function SignedInMenu() {
         <div>
             <Button
                 onClick={handleClick}
-                sx={{typography: "h6", color:"secondary.light"}}
-                >
-                {user?.username}
-            </Button>
+                sx={{ typography: "h6", color: "secondary.light" }}
+            >
+                <Avatar onClick={handleClick} sx={{bgcolor: "secondary.dark"}} >{user?.username.charAt(0)}</Avatar>
                 
+            </Button>
+
             <Menu
                 id="fade-menu"
                 MenuListProps={{
@@ -36,12 +37,18 @@ export default function SignedInMenu() {
                 onClose={handleClose}
                 TransitionComponent={Fade}
             >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem component={Link} to="/orders" >My orders</MenuItem>
+                {/* <MenuItem onClick={handleClose}>Profile</MenuItem> */}
+                <MenuItem component={Link} to="/orders" >
+                    My orders
+                </MenuItem>
+
                 <MenuItem onClick={() => {
                     dispatch(signOut());
                     dispatch(clearBasket());
-                }}>Logout</MenuItem>
+                }}>
+                    Logout
+                </MenuItem>
+
             </Menu>
         </div>
     );

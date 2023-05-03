@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace API.Entities.OrderAggregate
 {
@@ -18,6 +14,7 @@ namespace API.Entities.OrderAggregate
         public long Subtotal { get; set; }
         public long DeliveryFee { get; set; }
         public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
+        public string PaymentIntentId { get; set; }
         public long GetTotal()
         {
             return Subtotal + DeliveryFee;

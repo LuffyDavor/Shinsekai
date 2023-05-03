@@ -1,18 +1,19 @@
 import { ShoppingCart } from "@mui/icons-material";
-import { AppBar, Badge, Box, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
+import { AppBar, Avatar, Badge, Box, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
 import { useAppSelector } from "../store/configureStore";
 import SignedInMenu from "./SignedInMenu";
 
 interface Props {
-    darkmode: boolean
+    darkmode: boolean;
     handleThemeChange: () => void;
 }
 
 const midLinks = [
-    { title: "catalog", path: "/catalog" },
-    { title: "about", path: "/about" },
-    { title: "contact", path: "/contact" },
+    { title: "Home", path: "/" },
+    { title: "Shop", path: "/catalog" },
+    // { title: "about", path: "/about" },
+    // { title: "contact", path: "/contact" },
 ]
 const rightLinks = [
     { title: "login", path: "/login" },
@@ -37,22 +38,23 @@ export default function Header({ darkmode, handleThemeChange }: Props) {
     const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0)
 
     return (
-        <AppBar position="static" sx={{ mb: 2, background: "black" }}>
+        <AppBar position="sticky" sx={{ background: "black" }}>
 
             <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
 
                 <Box display="flex" alignItems="center">
-                    <Typography variant="h6" component={NavLink}
-                        to="/"
-                        sx={navStyles}
-                    >
-                        Shinsekai
-                    </Typography>
+                    <NavLink to="/">
+                        <img
+                            src="/images/logos/logo5.svg"
+                            alt="Logo"
+                            style={{ marginTop:"5px"}}
+                        />
+                    </NavLink>
                     <Switch color="secondary" checked={darkmode} onChange={handleThemeChange} />
                 </Box>
 
                 {/* LIST OF LINKS ON MIDDLE OF NAVBAR */}
-                <List sx={{ display: "flex" }}>
+                <List sx={{ display: "flex", marginRight: "20px" }}>
                     {midLinks.map(({ title, path }) => (
                         <ListItem
                             component={NavLink}
@@ -65,7 +67,7 @@ export default function Header({ darkmode, handleThemeChange }: Props) {
                     ))}
                 </List>
 
-                <Box display="flex" alignItems="center">
+                <Box display="flex" alignItems="center" >
                     <IconButton component={Link} to="/basket" size="large" edge="start" color="inherit" sx={{ mr: 2 }}>
                         <Badge badgeContent={itemCount} color="secondary">
                             <ShoppingCart />
